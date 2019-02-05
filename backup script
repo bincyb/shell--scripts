@@ -1,0 +1,23 @@
+#!/bin/bash
+#This script create compressed backup of  folder in local machine and transfers it to the sftp server, also removes 7 days older backup from sftp server
+
+#####START taking backup in local server
+TIME ='date +%b-%d-%y'                                 # gets the dcurrent date
+destination = /tmp/backup                               #backup temporary storage location in productn server
+TIME1 =date -d "now - 7 days""+%b-%d-%y"              #calculate days before date for older file removal
+backupfile = file_backup-$TIME.tar.gz                 #filename of tarred backup of the day
+sourcedir = /var/www/html/rootdir                                         #directory which should be backedup
+sudo tar -czf $destination/$backupfile  $sourcedir                        #creating backup in local machine
+mysqldump -u root -p'password' dbname>> /tmp/backup/dbname_$TIME.sql      #creating mysql db backup
+
+####### uploading today's backup to sftp server and removing 7 days older
+sshpass -p 'password_sftpserver' sftp  user@sftpserver.com  <<EOF
+lcd /tmp/backup
+put file_backup-$TIME.tar.gz                                                #uploading backup
+put  dbname_$TIME.sql
+rm file_backup-$TIME1.tar.gz                                                  #removing older
+rm  dbname_$TIME1.sql
+
+exit <<EOF
+
+rm -rf  /tmp/backup/*                                                  #remove temporary copy in localhost
