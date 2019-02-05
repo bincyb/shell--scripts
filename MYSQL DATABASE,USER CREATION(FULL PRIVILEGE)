@@ -1,0 +1,13 @@
+
+#!/bin/bash
+
+#this script is used to create a mysql database and a user with full privilege on the db
+#3 arguments to be passed while running script,1st is dbname,2nd dbusername,3rd password for new user
+
+mysql -uroot -p'password'<<MYSQL_SCRIPT       #enter password of mysql root user instead of password
+CREATE DATABASE $1;
+CREATE USER '$2'@'localhost' IDENTIFIED BY '$3';
+GRANT ALL PRIVILEGES ON $1.* TO '$2'@'localhost';
+FLUSH PRIVILEGES;
+MYSQL_SCRIPT
+
