@@ -1,0 +1,16 @@
+#GREP Usage
+
+List out the filenames containing the string
+grep -l "string"  /directiry_loction
+
+display next 10 lines  after each stringmatch
+grep -A 10 "string"  filename
+
+display 4 line before each string appearence
+grep -B 4 "string" fimename
+
+take count of string match
+grep -c "string"  filename
+
+search the string in all files in the directory
+grep -ir "srting" /directory
